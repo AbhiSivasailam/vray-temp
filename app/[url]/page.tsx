@@ -39,7 +39,7 @@ async function Search({ url }: { url: string }) {
       : "http://localhost:3000"
   );
   apiUrl.pathname = "/request";
-  apiUrl.searchParams.set("url", url);
+  apiUrl.searchParams.set("url", decodeURIComponent(url));
   const res = await (
     await fetch(apiUrl, {
       cache: "no-store",
