@@ -66,9 +66,13 @@ async function Search({ url }: { url: string }) {
     );
   }
 
+  const isVercelResponse = res.headers.find(
+    (header: string[]) => header[0] === "x-vercel-id"
+  );
+
   return (
     <>
-      <div className="border-b border-gray-400 pb-2 text-sm font-mono mb-3">
+      <div className="border-b border-gray-400 dark:border-gray-600 pb-2 text-sm font-mono mb-3">
         Response time: {res.time}ms
       </div>
 
@@ -105,33 +109,53 @@ async function Search({ url }: { url: string }) {
                           const label = match?.[2] ?? match?.[1];
                           const duration = parseFloat(match?.[3] ?? "0");
 
+                          let normalizedLabel = label;
+                          let leftOffsetPercentage = 0;
+
+                          if (label != null && isVercelResponse) {
+                            const labelOffsets = Array.from(
+                              label.matchAll(/_(\d+)\+(\d+)/g)
+                            );
+                            if (labelOffsets.length > 0) {
+                              normalizedLabel = label.split("_")[0];
+                              // TODO: handle the scenario when there are multiple _ spans
+                              const offsetDuration = labelOffsets.length
+                                ? Number(labelOffsets[0][1])
+                                : 0;
+                              leftOffsetPercentage =
+                                (offsetDuration / max) * 100;
+                            }
+                          }
+
                           return (
                             <>
-                              <div className="whitespace-nowrap">{label}</div>
-                              <div className="w-full text-black text-sm">
+                              <div
+                                className="whitespace-nowrap"
+                                title={item[1]}
+                              >
+                                {normalizedLabel}
+                              </div>
+                              <div
+                                className="w-full text-black text-sm"
+                                title={item[1]}
+                              >
                                 {duration != null ? (
                                   <div
+                                    className={`${
+                                      duration !== 0 ? "px-1" : ""
+                                    } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center ${
+                                      // pick a random color
+                                      COLORS[
+                                        Math.floor(
+                                          Math.random() * COLORS.length
+                                        ) % COLORS.length
+                                      ]
+                                      //
+                                    }`}
                                     style={{
                                       width: `${(duration / max) * 100}%`,
+                                      marginLeft: `${leftOffsetPercentage}%`,
                                     }}
-                                    className={`
-                                  px-1
-                                  whitespace-nowrap
-                                  min-w-[1px]
-                                  h-full
-                                  inline-flex
-                                  flex-col
-                                  justify-center
-                                  ${
-                                    // pick a random color
-                                    COLORS[
-                                      Math.floor(
-                                        Math.random() * COLORS.length
-                                      ) % COLORS.length
-                                    ]
-                                    //
-                                  }
-                                `}
                                   >
                                     {duration > 0 ? `${duration}ms` : ""}
                                   </div>
