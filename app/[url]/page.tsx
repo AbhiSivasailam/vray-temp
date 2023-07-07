@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function URLPage({
   params: { url },
@@ -84,97 +85,103 @@ async function Search({ url }: { url: string }) {
                 {item[0]}
               </div>
               <div className="overflow-auto break-words mb-3" key={`v-${i}`}>
-                {(() => {
-                  if (item[0].toLowerCase() === "server-timing") {
-                    // get max timing
-                    const max = item[1]
-                      .split(",")
-                      .reduce((acc: number, cur: string) => {
-                        const match = cur.match(
-                          /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
-                        );
-                        if (match) {
-                          const dur = parseFloat(match[3] ?? "0");
-                          return dur > acc ? dur : acc;
-                        }
-                        return acc;
-                      }, 0);
-
-                    return (
-                      <div className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
-                        {item[1].split(",").map((timing: string, i: number) => {
-                          const match = timing.match(
-                            /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
-                          );
-                          const label = match?.[2] ?? match?.[1];
-                          const duration = parseFloat(match?.[3] ?? "0");
-
-                          let normalizedLabel = label;
-                          let leftOffsetPercentage = 0;
-
-                          if (label != null && isVercelResponse) {
-                            const labelOffsets = Array.from(
-                              label.matchAll(/_(\d+)\+(\d+)/g)
-                            );
-                            if (labelOffsets.length > 0) {
-                              normalizedLabel = label.split("_")[0];
-                              // TODO: handle the scenario when there are multiple _ spans
-                              const offsetDuration = labelOffsets.length
-                                ? Number(labelOffsets[0][1])
-                                : 0;
-                              leftOffsetPercentage =
-                                (offsetDuration / max) * 100;
-                            }
-                          }
-
-                          return (
-                            <>
-                              <div
-                                className="whitespace-nowrap"
-                                title={item[1]}
-                              >
-                                {normalizedLabel}
-                              </div>
-                              <div
-                                className="w-full text-black text-sm"
-                                title={item[1]}
-                              >
-                                {duration != null ? (
-                                  <div
-                                    className={`${
-                                      duration !== 0 ? "px-1" : ""
-                                    } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center ${
-                                      // pick a random color
-                                      COLORS[
-                                        Math.floor(
-                                          Math.random() * COLORS.length
-                                        ) % COLORS.length
-                                      ]
-                                      //
-                                    }`}
-                                    style={{
-                                      width: `${(duration / max) * 100}%`,
-                                      marginLeft: `${leftOffsetPercentage}%`,
-                                    }}
-                                  >
-                                    {duration > 0 ? `${duration}ms` : ""}
-                                  </div>
-                                ) : null}
-                              </div>
-                            </>
-                          );
-                        })}
+                {item[0].toLowerCase() === "server-timing" ? (
+                  <ErrorBoundary
+                    fallback={
+                      <div>
+                        [Failed to visually render server-timing] {item[1]}
                       </div>
-                    );
-                  } else {
-                    return item[1];
-                  }
-                })()}
+                    }
+                  >
+                    <ServerTiming
+                      isVercelResponse={isVercelResponse}
+                      data={item[1]}
+                    />
+                  </ErrorBoundary>
+                ) : (
+                  item[1]
+                )}
               </div>
             </>
           );
         })}
       </div>
     </>
+  );
+}
+
+function ServerTiming({
+  isVercelResponse,
+  data,
+}: {
+  isVercelResponse: boolean;
+  data: string;
+}) {
+  // get max timing
+  const max = data.split(",").reduce((acc: number, cur: string) => {
+    const match = cur.match(
+      /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
+    );
+    if (match) {
+      const dur = parseFloat(match[3] ?? "0");
+      return dur > acc ? dur : acc;
+    }
+    return acc;
+  }, 0);
+
+  return (
+    <div className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
+      {data.split(",").map((timing: string, i: number) => {
+        const match = timing.match(
+          /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
+        );
+        const label = match?.[2] ?? match?.[1];
+        const duration = parseFloat(match?.[3] ?? "0");
+
+        let normalizedLabel = label;
+        let leftOffsetPercentage = 0;
+
+        if (label != null && isVercelResponse) {
+          const labelOffsets = Array.from(label.matchAll(/_(\d+)\+(\d+)/g));
+          if (labelOffsets.length > 0) {
+            normalizedLabel = label.split("_")[0];
+            // TODO: handle the scenario when there are multiple _ spans
+            const offsetDuration = labelOffsets.length
+              ? Number(labelOffsets[0][1])
+              : 0;
+            leftOffsetPercentage = (offsetDuration / max) * 100;
+          }
+        }
+
+        return (
+          <>
+            <div className="whitespace-nowrap" title={data}>
+              {normalizedLabel}
+            </div>
+            <div className="w-full text-black text-sm" title={data}>
+              {duration != null ? (
+                <div
+                  className={`${
+                    duration !== 0 ? "px-1" : ""
+                  } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center ${
+                    // pick a random color
+                    COLORS[
+                      Math.floor(Math.random() * COLORS.length) % COLORS.length
+                    ]
+                    //
+                  }`}
+                  style={{
+                    width: `${(duration / max) * 100}%`,
+                    marginLeft: `${leftOffsetPercentage}%`,
+                  }}
+                >
+                  {duration > 0 ? `${duration}ms` : ""}
+                </div>
+              ) : null}
+            </div>
+          </>
+        );
+      })}
+    </div>
   );
 }
