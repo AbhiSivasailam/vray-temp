@@ -68,6 +68,10 @@ async function Search({ url }: { url: string }) {
 
   return (
     <>
+      <div className="border-b border-gray-400 pb-2 text-sm font-mono mb-3">
+        Response time: {res.time}ms
+      </div>
+
       <div className="text-md md:text-base grid grid-cols-1 md:grid-cols-[auto,1fr] gap-x-6 max-w-full font-mono">
         {res.headers.map((item: any, i: number) => {
           return (

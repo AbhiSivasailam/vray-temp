@@ -14,6 +14,7 @@ export async function GET(req: Request) {
   let res;
 
   try {
+    const time = Date.now();
     res = await fetch(url, {
       cache: "no-cache",
       headers: {
@@ -22,8 +23,11 @@ export async function GET(req: Request) {
     });
 
     // serialize headers
-    // @ts-ignore
-    return Response.json({ headers: [...res.headers.entries()] });
+    return Response.json({
+      time: Date.now() - time,
+      // @ts-ignore
+      headers: [...res.headers.entries()],
+    });
   } catch (err) {
     return Response.json({
       error: err instanceof Error ? err.message : String(err),
