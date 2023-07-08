@@ -119,11 +119,9 @@ function ServerTiming({
 }) {
   // get max timing
   const max = data.split(",").reduce((acc: number, cur: string) => {
-    const match = cur.match(
-      /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
-    );
+    const match = cur.match(/;dur=([0-9.]+)/);
     if (match) {
-      const dur = parseFloat(match[3] ?? "0");
+      const dur = parseFloat(match[1] ?? "0");
       return dur > acc ? dur : acc;
     }
     return acc;
@@ -131,7 +129,7 @@ function ServerTiming({
 
   return (
     <div className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
-      {data.split(",").map((timing: string, i: number) => {
+      {data.split(",").map((timing: string) => {
         const match = timing.match(
           /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
         );
