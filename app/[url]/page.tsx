@@ -25,12 +25,12 @@ export default function URLPage({
 }
 
 const COLORS = [
-  "bg-green-200",
-  "bg-yellow-200",
-  "bg-red-200",
-  "bg-purple-200",
-  "bg-blue-200",
-  "bg-pink-200",
+  "bg-green-200 dark:bg-green-500",
+  "bg-yellow-200 dark:bg-yellow-500",
+  "bg-red-200 dark:bg-red-500",
+  "bg-purple-200 dark:bg-purple-500",
+  "bg-blue-200 dark:bg-blue-500",
+  "bg-pink-200 dark:bg-pink-500",
 ];
 
 async function Search({ url }: { url: string }) {
@@ -156,12 +156,16 @@ function ServerTiming({
             <div className="whitespace-nowrap" title={data}>
               {normalizedLabel}
             </div>
-            <div className="w-full text-black text-sm" title={data}>
+            <div
+              className="w-full text-black dark:text-white text-sm"
+              title={data}
+            >
               {duration != null ? (
                 <div
                   className={`${
                     duration !== 0 ? "px-1" : ""
-                  } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center ${
+                  } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center text-s
+                  ${
                     // pick a random color
                     COLORS[
                       Math.floor(Math.random() * COLORS.length) % COLORS.length
