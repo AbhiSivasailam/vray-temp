@@ -84,7 +84,7 @@ async function Search({ url }: { url: string }) {
               <div className="whitespace-nowrap font-bold" key={`h-${i}`}>
                 {item[0]}
               </div>
-              <div className="overflow-auto break-words mb-3" key={`v-${i}`}>
+              <div className="pr-3 break-words mb-3" key={`v-${i}`}>
                 {item[0].toLowerCase() === "server-timing" ? (
                   <ErrorBoundary
                     fallback={
@@ -128,7 +128,7 @@ function ServerTiming({
   }, 0);
 
   return (
-    <div className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
+    <div title={data} className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
       {data.split(",").map((timing: string) => {
         const match = timing.match(
           /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
@@ -142,7 +142,9 @@ function ServerTiming({
         if (label != null && isVercelResponse) {
           const labelOffsets = Array.from(label.matchAll(/_(\d+)\+(\d+)/g));
           if (labelOffsets.length > 0) {
-            normalizedLabel = label.split("_")[0];
+            // get all the label segments except for the last
+            normalizedLabel = label.split("_").slice(0, -1).join("_");
+
             // TODO: handle the scenario when there are multiple _ spans
             const offsetDuration = labelOffsets.length
               ? Number(labelOffsets[0][1])
@@ -153,12 +155,12 @@ function ServerTiming({
 
         return (
           <>
-            <div className="whitespace-nowrap" title={data}>
+            <div key={`label-${label}`} className="whitespace-nowrap">
               {normalizedLabel}
             </div>
             <div
               className="w-full text-black dark:text-white text-sm"
-              title={data}
+              key={`timing-${label}`}
             >
               {duration != null ? (
                 <div
