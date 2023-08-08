@@ -124,8 +124,8 @@ function ServerTiming({
     const descText = parts.find(t => t.startsWith('desc=')) ?? ''
     const durText = parts.find(t => t.startsWith('dur=')) ?? ''
     const duration = parseFloat(durText.split('=')[1] ?? '0');
-    const offsets = descText.split('_').filter(t => t.includes('+')).map(t => t.split('+').map(Number)) ?? [];
-    const offset = offsets[0]?.[0] ?? 0;
+    const offsets = descText.split('_').pop()?.split('+').map(Number) ?? [];
+    const offset = offsets[0] ?? 0;
     return { label, duration, offset };
   });
 
