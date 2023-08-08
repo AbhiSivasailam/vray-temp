@@ -45,6 +45,7 @@ async function Search({ url }: { url: string }) {
   const res = await (
     await fetch(apiUrl, {
       cache: "no-store",
+      redirect: "manual",
       headers: {
         'x-vercel-protection-bypass': process.env.DEPLOYMENT_PROTECTION_BYPASS ?? '',
       },
