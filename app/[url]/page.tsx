@@ -46,7 +46,7 @@ async function Search({ url }: { url: string }) {
     await fetch(apiUrl, {
       cache: "no-store",
       headers: {
-        cookie: headers().get("cookie") ?? "",
+        'x-vercel-protection-bypass': process.env.DEPLOYMENT_PROTECTION_BYPASS ?? '',
       },
     })
   ).json();
