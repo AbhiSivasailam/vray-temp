@@ -120,10 +120,10 @@ function ServerTiming({
 
   // TODO: handle the scenario when there are multiple _ spans
   const timings = data.split(",").map((timing: string) => {
-    const [label, pt1, pt2] = timing.split(';');
-    const descText = pt2 ? pt1 : null;
-    const durText = pt2 ?? pt1;
-    const duration = parseFloat(durText?.split('=')?.[1] ?? 0);
+    const [label, ...parts] = timing.split(';');
+    const descText = parts.find(t => t.startsWith('desc='))
+    const durText = parts.find(t => t.startsWith('dur='))
+    const duration = parseFloat(durText?.split('=')?.[1] ?? '0');
     const offsets = descText?.split('_').filter(t => t.includes('+')).map(t => t.split('+').map(Number)) ?? [];
     const offset = offsets[0]?.[0] ?? 0;
     return { label, duration, offset };
