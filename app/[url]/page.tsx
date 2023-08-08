@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "edge";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { headers } from "next/headers";
 
 export default function URLPage({
   params: { url },
@@ -44,6 +45,7 @@ async function Search({ url }: { url: string }) {
   const res = await (
     await fetch(apiUrl, {
       cache: "no-store",
+      headers: headers(),
     })
   ).json();
 
