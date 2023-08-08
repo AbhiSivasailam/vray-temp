@@ -42,10 +42,15 @@ async function Search({ url }: { url: string }) {
   );
   apiUrl.pathname = "/request";
   apiUrl.searchParams.set("url", decodeURIComponent(url));
+  
+  const reqHeaders = Array.from(headers().entries()).reduce((acc, cur) => {
+    return { ...acc, [cur[0]]: cur[1] };
+  }, {});
+  
   const res = await (
     await fetch(apiUrl, {
       cache: "no-store",
-      headers: headers(),
+      headers: reqHeaders,
     })
   ).json();
 
