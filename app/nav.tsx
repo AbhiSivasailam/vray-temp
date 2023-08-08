@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Nav({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   async function onInput(e: React.ChangeEvent<HTMLInputElement>) {
     router.replace("/" + encodeURIComponent(e.target.value));
@@ -20,6 +21,7 @@ export function Nav({ children }: { children: React.ReactNode }) {
           autoCapitalize="off"
           autoFocus
           placeholder="rauchg.com"
+          defaultValue={pathname.slice(1)}
           onInput={onInput}
         />
       </div>

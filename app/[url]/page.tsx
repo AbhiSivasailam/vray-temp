@@ -74,7 +74,7 @@ async function Search({ url }: { url: string }) {
   return (
     <>
       <div className="border-b border-gray-400 dark:border-gray-600 pb-2 text-sm font-mono mb-3">
-        Response time: {res.time}ms
+        Response: {res.totalTime}ms • Headers: {res.headerTime}ms • Body: {res.bodyTime}ms • Status: {res.status}
       </div>
 
       <div className="text-md md:text-base grid grid-cols-1 md:grid-cols-[auto,1fr] gap-x-6 max-w-full font-mono">
@@ -117,46 +117,32 @@ function ServerTiming({
   isVercelResponse: boolean;
   data: string;
 }) {
+
+  // TODO: handle the scenario when there are multiple _ spans
+  const timings = data.split(",").map((timing: string) => {
+    const [label, pt1, pt2] = timing.split(';');
+    const descText = pt2 ? pt1 : null;
+    const durText = pt2 ?? pt1;
+    const duration = parseFloat(durText?.split('=')?.[1] ?? 0);
+    const offsets = descText?.split('_').filter(t => t.includes('+')).map(t => t.split('+').map(Number)) ?? [];
+    const offset = offsets[0]?.[0] ?? 0;
+    return { label, duration, offset };
+  });
+
   // get max timing
-  const max = data.split(",").reduce((acc: number, cur: string) => {
-    const match = cur.match(/;dur=([0-9.]+)/);
-    if (match) {
-      const dur = parseFloat(match[1] ?? "0");
-      return dur > acc ? dur : acc;
-    }
-    return acc;
+  const max = timings.reduce((acc, cur) => {
+    return Math.max(acc, cur.offset + cur.duration)
   }, 0);
 
   return (
     <div title={data} className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
-      {data.split(",").map((timing: string) => {
-        const match = timing.match(
-          /([a-zA-Z0-9_]+)(?:; ?desc="?([^";]*)"?)?;?(?: ?dur=([0-9.]+))?/
-        );
-        const label = match?.[2] ?? match?.[1];
-        const duration = parseFloat(match?.[3] ?? "0");
-
-        let normalizedLabel = label;
-        let leftOffsetPercentage = 0;
-
-        if (label != null && isVercelResponse) {
-          const labelOffsets = Array.from(label.matchAll(/_(\d+)\+(\d+)/g));
-          if (labelOffsets.length > 0) {
-            // get all the label segments except for the last
-            normalizedLabel = label.split("_").slice(0, -1).join("_");
-
-            // TODO: handle the scenario when there are multiple _ spans
-            const offsetDuration = labelOffsets.length
-              ? Number(labelOffsets[0][1])
-              : 0;
-            leftOffsetPercentage = (offsetDuration / max) * 100;
-          }
-        }
+      {timings.map(({ label, offset, duration }) => {
+        const leftOffsetPercentage = (offset / max) * 100;
 
         return (
           <>
             <div key={`label-${label}`} className="whitespace-nowrap">
-              {normalizedLabel}
+              {label}
             </div>
             <div
               className="w-full text-black dark:text-white text-sm"
