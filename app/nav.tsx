@@ -21,7 +21,7 @@ export function Nav({ children }: { children: React.ReactNode }) {
           autoCapitalize="off"
           autoFocus
           placeholder="rauchg.com"
-          defaultValue={pathname.slice(1)}
+          defaultValue={decodeURIComponent(pathname.slice(1))}
           onInput={onInput}
         />
       </div>
