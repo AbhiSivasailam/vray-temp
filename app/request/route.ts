@@ -1,5 +1,10 @@
 export const preferredRegion = "global";
 
+const timestamp =
+  (start = process.hrtime.bigint()) =>
+  () =>
+    Math.round(Number(process.hrtime.bigint() - start) / 1e6)
+
 export async function GET(req: Request) {
   let url = new URL(req.url).searchParams.get("url")?.trim();
 
@@ -13,7 +18,7 @@ export async function GET(req: Request) {
 
   try {
     // Log time we started request
-    const start = Date.now();
+    const duration = timestamp();
     
     // Fetch headers
     const res = await fetch(url, {
@@ -24,23 +29,27 @@ export async function GET(req: Request) {
     });
 
     // Calculate time to receive all headers
-    const headerTime = Date.now() - start;
+    const headerTime = duration();
 
     // Read in full response body
     await res.text();
 
     // Calculate time to receive the response body
-    const bodyTime = Date.now() - headerTime - start;
+    const bodyTime = duration() - headerTime;
 
     // Calculate total response time
-    const totalTime = Date.now() - start;
+    const totalTime = duration();
+
+    // Determine hotness
+    const coldStart = res.headers.get("server-timing")?.includes('hot=0')
 
     // serialize headers
     return Response.json({
       status: res.status,
-      headerTime: headerTime,
-      bodyTime: bodyTime,
-      totalTime: totalTime,
+      headerTime,
+      coldStart,
+      bodyTime,
+      totalTime,
       // @ts-ignore
       headers: [...res.headers.entries()],
     });
