@@ -2,8 +2,8 @@ export const preferredRegion = "global";
 
 const timestamp =
   (start = process.hrtime.bigint()) =>
-  () =>
-    Math.round(Number(process.hrtime.bigint() - start) / 1e6)
+    () =>
+      Math.round(Number(process.hrtime.bigint() - start) / 1e6)
 
 export async function GET(req: Request) {
   let url = new URL(req.url).searchParams.get("url")?.trim();
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   try {
     // Log time we started request
     const duration = timestamp();
-    
+
     // Fetch headers
     const res = await fetch(url, {
       cache: "no-cache",
