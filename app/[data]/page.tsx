@@ -149,19 +149,16 @@ function ServerTimingGraph({
   }, 0);
 
   return (
-    <div title={data} className="grid grid-cols-[auto,1fr] gap-x-6 gap-y-2">
+    <div title={data} className="flex flex-col text-md md:text-base font-mono">
       {timings.map(({ label, offset, duration }) => {
         const leftOffsetPercentage = (offset / max) * 100;
 
         return (
-          <>
-            <div key={`label-${label}`} className="whitespace-nowrap">
+          <div key={label} className="flex flex-nowrap hover:bg-neutral-800 py-1 px-2 rounded group">
+            <div className="whitespace-nowrap w-[250px] text-neutral-400 group-hover:dark:text-gray-100">
               {label}
             </div>
-            <div
-              className="w-full text-black dark:text-white text-sm"
-              key={`timing-${label}`}
-            >
+            <div className="w-full text-black dark:text-white text-sm">
               {duration != null ? (
                 <div
                   className={`${duration !== 0 ? "px-1" : ""
@@ -178,11 +175,11 @@ function ServerTimingGraph({
                     marginLeft: `${leftOffsetPercentage}%`,
                   }}
                 >
-                  {duration > 0 ? `${duration}ms` : ""}
+                  {duration}ms
                 </div>
               ) : null}
             </div>
-          </>
+          </div>
         );
       })}
     </div>

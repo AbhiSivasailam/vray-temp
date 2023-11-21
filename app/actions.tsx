@@ -15,6 +15,7 @@ export async function request(url: string) {
       cache: "no-cache",
       headers: {
         "x-vercel-debug-proxy-timing": "1",
+        "x-vercel-internal-timing": "1",
       },
     });
 
