@@ -139,7 +139,7 @@ function ServerTimingGraph({
     const durText = parts.find(t => t.startsWith('dur=')) ?? ''
     const duration = parseFloat(durText.split('=')[1] ?? '0');
     const offsets = descText.split('_').pop()?.split('+').map(Number) ?? [];
-    const offset = offsets[0] ?? 0;
+    const offset = offsets[0] || 0;
     return { label, duration, offset };
   }).sort((a, b) => a.offset - b.offset);
 
