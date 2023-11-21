@@ -141,7 +141,13 @@ function ServerTimingGraph({
     const offsets = descText.split('_').pop()?.split('+').map(Number) ?? [];
     const offset = offsets[0] || 0;
     return { label, duration, offset };
-  }).sort((a, b) => a.offset - b.offset);
+  }).sort((a, b) => {
+    if (a.offset === b.offset) {
+      return b.duration - a.duration
+    }
+
+    return a.offset - b.offset
+  });
 
   // get max timing
   const max = timings.reduce((acc, cur) => {
