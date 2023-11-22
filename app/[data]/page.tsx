@@ -88,6 +88,9 @@ async function Search({ url }: { url: string }) {
             <>
               <div className="whitespace-nowrap font-semibold text-black dark:text-white" key={`h-${i}`}>
                 {item[0]}
+                {item[0].toLowerCase() === "server-timing" ? (
+                  <a href={`/${encodeURIComponent(item[1])}?timing=true`} target="_blank" className="text-gray-600 dark:text-gray-300 font-normal"> (🔗 permalink)</a>
+                ) : null}
               </div>
               <div className="pr-3 break-words mb-3" key={`v-${i}`}>
                 {item[0].toLowerCase() === "server-timing" ? (
@@ -160,8 +163,8 @@ function ServerTimingGraph({
         const leftOffsetPercentage = (offset / max) * 100;
 
         return (
-          <div key={label} className="flex flex-nowrap hover:bg-neutral-800 py-1 px-2 rounded group">
-            <div className="whitespace-nowrap w-[250px] text-neutral-400 group-hover:dark:text-gray-100">
+          <div key={label} className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-2 rounded group">
+            <div className="whitespace-nowrap w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100">
               {label}
             </div>
             <div className="w-full text-black dark:text-white text-sm">
