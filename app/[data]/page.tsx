@@ -160,8 +160,8 @@ function ServerTimingGraph({
         const leftOffsetPercentage = (offset / max) * 100;
 
         return (
-          <div key={label} className="flex flex-nowrap hover:bg-neutral-800 py-1 px-2 rounded group">
-            <div className="whitespace-nowrap w-[250px] text-neutral-400 group-hover:dark:text-gray-100">
+          <div key={label} className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-2 rounded group">
+            <div className="whitespace-nowrap w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100">
               {label}
             </div>
             <div className="w-full text-black dark:text-white text-sm">
