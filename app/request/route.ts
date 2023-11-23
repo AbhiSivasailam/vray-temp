@@ -25,6 +25,8 @@ export async function GET(req: Request) {
       cache: "no-cache",
       headers: {
         "x-vercel-debug-proxy-timing": "1",
+        "x-vercel-internal-timing": "1",
+        "x-worker-debug": "1",
       },
     });
 
