@@ -23,6 +23,7 @@ export async function GET(req: Request) {
     // Fetch headers
     const res = await fetch(url, {
       cache: "no-cache",
+      redirect: "manual",
       headers: {
         "x-vercel-debug-proxy-timing": "1",
         "x-vercel-internal-timing": "1",
