@@ -1,4 +1,4 @@
-import { Result } from "@/app/[data]/page"
+import { Result } from "@/app/[data]/Result"
 import { SuccessData } from "@/app/types"
 import { kv } from "@vercel/kv"
 
