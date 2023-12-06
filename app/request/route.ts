@@ -1,3 +1,5 @@
+import { ErrorData, SuccessData } from "../types";
+
 export const preferredRegion = "global";
 
 const timestamp =
@@ -6,14 +8,16 @@ const timestamp =
       Math.round(Number(process.hrtime.bigint() - start) / 1e6)
 
 export async function GET(req: Request) {
-  let url = new URL(req.url).searchParams.get("url")?.trim();
+  let searchParamsUrl = new URL(req.url).searchParams.get("url")?.trim();
 
-  if (!url) {
+  if (!searchParamsUrl) {
     return new Response("Missing url parameter", { status: 400 });
   }
 
-  if (!url.startsWith("http")) {
-    url = "https://" + url;
+  let urlToFetch = searchParamsUrl
+
+  if (!searchParamsUrl.startsWith("http")) {
+    urlToFetch = "https://" + searchParamsUrl;
   }
 
   try {
@@ -21,7 +25,7 @@ export async function GET(req: Request) {
     const duration = timestamp();
 
     // Fetch headers
-    const res = await fetch(url, {
+    const res = await fetch(urlToFetch, {
       cache: "no-cache",
       redirect: "manual",
       headers: {
@@ -44,7 +48,7 @@ export async function GET(req: Request) {
     const totalTime = duration();
 
     // Determine hotness
-    const coldStart = res.headers.get("server-timing")?.includes('hot=0')
+    const coldStart = !!res.headers.get("server-timing")?.includes('hot=0')
 
     // serialize headers
     return Response.json({
@@ -55,10 +59,11 @@ export async function GET(req: Request) {
       totalTime,
       // @ts-ignore
       headers: [...res.headers.entries()],
-    });
+      url: searchParamsUrl,
+    } satisfies SuccessData);
   } catch (err) {
     return Response.json({
       error: err instanceof Error ? err.message : String(err),
-    });
+    } satisfies ErrorData);
   }
 }
