@@ -17,7 +17,11 @@ export default function RootLayout({
       lang="en"
     >
       <body>
-        <Nav>{children}</Nav>
+        <Nav>
+          <div className="flex w-full h-full p-5 self-stretch grow flex-col">
+            {children}
+          </div>
+        </Nav>
       </body>
     </html>
   );
