@@ -13,7 +13,7 @@ export function ShareButton({ data }: { data: SuccessData }) {
     setIsLoading(true)
     const result = await save(data)
 
-    window.open(`/shared/${result.id}`, '_blank')
+    window.location.href = `${window.location.origin}/shared/${result.id}`
     setIsLoading(false)
   }
 
