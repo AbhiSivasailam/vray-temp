@@ -42,8 +42,8 @@ export function Nav({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="w-full items-center whitespace-nowrap text-md border-b border-gray-200 dark:border-neutral-700 flex flex-wrap md:flex-nowrap">
-        <NavLink href="/" selected={!isTimingOnly}>Get headers</NavLink>
-        <NavLink href="/?timing=true" selected={isTimingOnly}>Analyze Server Timing</NavLink>
+        <NavLink href="/" selected={!isTimingOnly && !pathname.startsWith('/shared')}>Get headers</NavLink>
+        <NavLink href="/?timing=true" selected={isTimingOnly && !pathname.startsWith('/shared')}>Analyze Server Timing</NavLink>
         <form className="w-full border-t md:border-l md:border-t-transparent border-gray-200 dark:border-neutral-700">
           <input
             className="w-full rounded-none dark:text-gray-100 dark:bg-black p-5 focus:outline-none placeholder-neutral-400"
