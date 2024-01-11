@@ -8,7 +8,7 @@ export function Result({ data, showShareButton }: { data: SuccessData, showShare
   return (
     <>
       <div className="text-sm font-mono pb-8 text-gray-600 dark:text-gray-400">
-        {data.coldStart ? "🥶" : "🌶️"} Response: {data.totalTime}ms • Headers: {data.headerTime}ms ({toPercent(data.headerTime, data.totalTime)})  • Body: {data.bodyTime}ms ({toPercent(data.bodyTime, data.totalTime)}) • Status: {data.status} • URL: {data.url}
+        {data.coldStart ? "🥶" : "🌶️"} Response: {data.totalTime}ms • Headers: {data.headerTime}ms ({toPercent(data.headerTime, data.totalTime)})  • Body: {data.bodyTime}ms ({toPercent(data.bodyTime, data.totalTime)}) • Status: {data.status} • URL: <span className="font-bold text-gray-900 dark:text-gray-100">{data.url}</span>
         {showShareButton ? (
           <> • <ShareButton data={data} /></>
         ) : null}
