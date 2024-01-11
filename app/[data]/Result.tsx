@@ -20,9 +20,6 @@ export function Result({ data, showShareButton }: { data: SuccessData, showShare
             <>
               <div className="whitespace-nowrap font-semibold text-black dark:text-white" key={`h-${i}`}>
                 {item[0]}
-                {item[0].toLowerCase() === "server-timing" ? (
-                  <a href={`/${encodeURIComponent(item[1])}?timing=true`} target="_blank" className="text-gray-600 dark:text-gray-300 font-normal"> (🔗 permalink)</a>
-                ) : null}
               </div>
               <div className="pr-3 break-words mb-3" key={`v-${i}`}>
                 {item[0].toLowerCase() === "server-timing" ? (
