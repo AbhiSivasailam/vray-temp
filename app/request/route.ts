@@ -32,6 +32,10 @@ export async function GET(req: Request) {
         "x-vercel-debug-proxy-timing": "1",
         "x-vercel-internal-timing": "1",
         "x-worker-debug": "1",
+        // Use a dummy user agent to emmulate a browser request, useful to
+        // reduce cold starts from edge functions. See:
+        // https://github.com/vercel/proxy/blob/73df46e0c9319ecd9cc06e42ba19fb171891d44a/lib/routing/invoke_handler_cloudflare.lua#L185
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)",
       },
     });
 
