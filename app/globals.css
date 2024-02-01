@@ -7,3 +7,20 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+
+.tooltip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: inline;
+  text-wrap: pretty;
+  padding: 1rem 10rem;
+
+}
+
+.permalink {
+  background: linear-gradient(45deg, #ff00ff, #00f7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
