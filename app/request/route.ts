@@ -52,7 +52,33 @@ export async function GET(req: Request) {
     const totalTime = duration();
 
     // Determine hotness
-    const coldStart = !!res.headers.get("server-timing")?.includes('hot=0')
+
+    const serverTiming = res.headers.get("server-timing") ?? ''
+
+    const coldStart = 
+     /**
+      * for streaming lambda
+      * the `tla` is calulcated in node-bridge:
+      * https://github.com/vercel/edge-functions/blob/6499d9b8d8ef71bbb5040f11a734cee93fe2df96/packages/node-bridge-private/src/performance.ts#L307
+      * and prefixed with `lambda-` in the proxy:
+      * https://github.com/vercel/proxy/blob/8badc5810c6e3bdb4821849ea3d33c35394462d4/lib/bridge_timings.lua#L99
+      * 
+      */
+     serverTiming.includes('lambda-tla')
+     /**
+      * for legacy lambda
+      * // TODO: it seems it is not being collected ?
+      * https://github.com/vercel/proxy/blob/8badc5810c6e3bdb4821849ea3d33c35394462d4/lib/bridge_timings.lua#L60
+      */
+     false ||
+    
+      /**
+       * for edge functions
+       * https://github.com/vercel/edge-functions/blob/6499d9b8d8ef71bbb5040f11a734cee93fe2df96/packages/edge-functions-bridge/src/worker-template/handlers.ts#L147
+       * 
+       * // TODO: there is a `ehot` label but it's unclear what it means
+       */
+      serverTiming.includes('hot=0')
 
     // serialize headers
     return Response.json({
