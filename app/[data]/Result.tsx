@@ -114,7 +114,7 @@ function ServerTimingGraph({
 
         return (
           <div key={label} className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-2 rounded group">
-            <div className="cursor-help whitespace-nowrap min-w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100">
+            <div className="has-tooltip cursor-help whitespace-nowrap min-w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100">
               {description && <span className='tooltip shadow-lg p-2 bg-neutral-800 dark:bg-neutral-100 border-t border-gray-200 dark:border-neutral-700 text-neutral-800'>
                 <b>{label}</b>: <span className="font-sans">{description}</span>
               </span>}

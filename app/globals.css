@@ -9,6 +9,14 @@
 }
 
 .tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-50;
+}
+
+.tooltip {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -16,7 +24,6 @@
   display: inline;
   text-wrap: pretty;
   padding: 1rem 10rem;
-
 }
 
 .permalink {
