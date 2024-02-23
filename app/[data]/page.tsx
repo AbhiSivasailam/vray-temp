@@ -1,7 +1,9 @@
-export const dynamic = "force-dynamic";
-export const runtime = "edge";
 import { Suspense } from "react";
 import { Result, ServerTiming } from "./Result";
+import { request } from "../lib/request";
+
+export const preferredRegion = "global";
+export const dynamic = "force-dynamic";
 
 export default function URLPage({
   params: { data },
@@ -35,24 +37,9 @@ export default function URLPage({
 }
 
 async function Search({ url }: { url: string }) {
-  const apiUrl = new URL(
-    process.env.VERCEL_URL
-      ? `https://${process.env.DEBUG_CHALLENGE_MODE_REQUEST_URL ?? process.env.VERCEL_URL}`
-      : "http://localhost:3000"
-  );
-  apiUrl.pathname = "/request";
-  apiUrl.searchParams.set("url", decodeURIComponent(url));
-  const res = await (
-    await fetch(apiUrl, {
-      cache: "no-store",
-      redirect: "manual",
-      headers: {
-        'x-vercel-protection-bypass': process.env.DEPLOYMENT_PROTECTION_BYPASS ?? '',
-      },
-    })
-  ).json();
+  const res = await request(decodeURIComponent(url));
 
-  if (res.error) {
+  if ('error' in res) {
     return (
       <div
         className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-100"
