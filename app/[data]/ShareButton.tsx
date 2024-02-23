@@ -11,12 +11,14 @@ export function ShareButton({ data }: { data: SuccessData }) {
     if (isLoading) return
 
     setIsLoading(true)
-    const result = await save(data)
-
-    const sharedUrl = `${window.location.origin}/shared/${result.id}`
-    await navigator.clipboard.writeText(sharedUrl)
-    window.location.href = sharedUrl
-    setIsLoading(false)
+    try {
+      const result = await save(data)
+      const sharedUrl = `${window.location.origin}/shared/${result.id}`
+      await navigator.clipboard.writeText(sharedUrl)
+      window.location.href = sharedUrl
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
