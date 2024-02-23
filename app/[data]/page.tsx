@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Result, ServerTiming } from "./Result";
 import { request } from "../lib/request";
 
-export const preferredRegion = "global";
+export const preferredRegion = ["iad1", "sfo1", "fra1"];
 export const dynamic = "force-dynamic";
 
 export default function URLPage({
