@@ -37,8 +37,8 @@ export function Result({ data, showShareButton }: { data: SuccessData, showShare
       <div className="text-md md:text-base grid grid-cols-1 md:grid-cols-[auto,1fr] gap-x-6 max-w-full font-mono">
         {data.headers.map((item: any, i: number) => {
           return (
-            <div key={`h-${i}`}>
-              <div className="whitespace-nowrap font-semibold text-black dark:text-white">
+            <>
+              <div className="whitespace-nowrap font-semibold text-black dark:text-white" key={`h-${i}`}>
                 {item[0]}
               </div>
               <div className="pr-3 break-words mb-3" key={`v-${i}`}>
@@ -48,7 +48,7 @@ export function Result({ data, showShareButton }: { data: SuccessData, showShare
                   item[1]
                 )}
               </div>
-            </div>
+            </>
           );
         })}
       </div>
