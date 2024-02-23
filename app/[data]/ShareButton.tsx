@@ -14,7 +14,7 @@ export function ShareButton({ data }: { data: SuccessData }) {
     try {
       const result = await save(data)
       const sharedUrl = `${window.location.origin}/shared/${result.id}`
-      await navigator.clipboard.writeText(sharedUrl)
+      await navigator.clipboard.writeText(sharedUrl).catch(console.error)
       window.location.href = sharedUrl
     } finally {
       setIsLoading(false)
