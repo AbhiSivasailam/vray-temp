@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import "./globals.css";
 import { Nav } from "./nav";
 
@@ -17,11 +18,13 @@ export default function RootLayout({
       lang="en"
     >
       <body>
-        <Nav>
-          <div className="flex w-full h-full p-5 self-stretch grow flex-col">
-            {children}
-          </div>
-        </Nav>
+        <Suspense>
+          <Nav>
+            <div className="flex w-full h-full p-5 self-stretch grow flex-col">
+              {children}
+            </div>
+          </Nav>
+        </Suspense>
       </body>
     </html>
   );
