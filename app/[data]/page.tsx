@@ -37,7 +37,7 @@ export default function URLPage({
 async function Search({ url }: { url: string }) {
   const apiUrl = new URL(
     process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
+      ? `https://${process.env.DEBUG_CHALLENGE_MODE_REQUEST_URL ?? process.env.VERCEL_URL}`
       : "http://localhost:3000"
   );
   apiUrl.pathname = "/request";
