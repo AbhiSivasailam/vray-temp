@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Nav } from "./nav";
 
+export const preferredRegion = ["iad1", "sfo1", "fra1"];
+
 export const metadata = {
   title: "Get Headers tool",
   description: "Tool to get headers from a website",
