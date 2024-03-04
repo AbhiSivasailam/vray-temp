@@ -19,7 +19,12 @@ const LABELS = {
   'lambda-tunnel': 'Time to connect back to the tunnel server. Only relevant for streaming and the initial N1 requests.',
   'lambda': 'Measured in proxy - this is the TTFB of the full round trip to s-f-r, aws, customer code, and back, possibly including regional invocation',
   'lambda-schedstat-paused': 'milliseconds spent waiting in the cpu controller (run)queue. We can read this as how much time CPU is waiting to be scheduled. It can vary depending of the AWS Lambda machine tier. Low is better.',
-  'throttle': 'The percentage of schedstat-paused relative to the lambda-ttfb. This metric is oriented to have a more high level view of how much % of the request lifecycle the CPU is blocked. Low is better'
+  'lambda-aws-invoke': 'How long it took from when SFR or Proxy send the invocation to AWS, to the rusty-runtime being executed. This is an approximation of network + firecracker + whatever AWS is doing.',
+  'lambda-child-spawn': 'How long it took to spawn Node.js.',
+  'lambda-child-init': 'How long it took to initialise the Node.js bridge and start the internal HTTP server. This includes importing the user code.',
+  'lambda-child-request-ttfb': 'How long it took to send the request to the Node.js internal HTTP server and receive the headers & status code.',
+  'lambda-child-request': 'How long it took to send the request to the Node.js internal HTTP server and receive the full body.',
+  'lambda-tunnel-connect': 'How long it took to connect to the N1 tunnel and do the handshake.',
 }
 
 const toPercent = (partial: number, total: number) => `${Math.round((partial / total) * 100)}%`;
@@ -113,14 +118,14 @@ function ServerTimingGraph({
         const description: string = LABELS[label as keyof typeof LABELS] ?? '';
 
         return (
-          <div key={label} className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-2 rounded group">
-            <div className="has-tooltip cursor-help min-w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100">
+          <div key={label} className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 rounded group">
+            <div className="has-tooltip cursor-help min-w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100 py-1">
               {description && <span className='tooltip p-2 bg-neutral-800 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-800'>
                 <b>{label}</b>: <span className="font-sans">{description}</span>
               </span>}
               {label}
             </div>
-            <div className="w-full text-black dark:text-white text-sm">
+            <div className="w-full text-black dark:text-white text-sm py-1">
               {duration != null ? (
                 <div
                   className={`${duration !== 0 ? "px-1" : ""
