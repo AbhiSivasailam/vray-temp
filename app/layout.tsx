@@ -9,16 +9,13 @@ export const metadata = {
   description: "Tool to get headers from a website",
 };
 
-export default function RootLayout({
-  children,
-}: {
+interface Props {
   children: React.ReactNode;
-}) {
+}
+
+export default function RootLayout({ children }: Props) {
   return (
-    <html
-      className="text-gray-600 dark:text-gray-300 dark:bg-black"
-      lang="en"
-    >
+    <html className="text-gray-600 dark:text-gray-300 dark:bg-black" lang="en">
       <body>
         <Suspense>
           <Nav>

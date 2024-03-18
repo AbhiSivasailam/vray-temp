@@ -1,29 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { SuccessData } from "../types";
+import { type FetchSuccess } from "@/app/types";
 import { save } from "./share-action";
+import { useState } from "react";
 
-export function ShareButton({ data }: { data: SuccessData }) {
-  const [isLoading, setIsLoading] = useState(false)
+export function ShareButton({ data }: { data: FetchSuccess }) {
+  const [isLoading, setIsLoading] = useState(false);
 
   async function shareData() {
-    if (isLoading) return
-
-    setIsLoading(true)
-    try {
-      const result = await save(data)
-      const sharedUrl = `${window.location.origin}/shared/${result.id}`
-      await navigator.clipboard.writeText(sharedUrl).catch(console.error)
-      window.location.href = sharedUrl
-    } finally {
-      setIsLoading(false)
+    if (!isLoading) {
+      setIsLoading(true);
+      try {
+        const result = await save(data);
+        const sharedUrl = `${window.location.origin}/shared/${result.id}`;
+        await navigator.clipboard.writeText(sharedUrl).catch(console.error);
+        window.location.href = sharedUrl;
+      } finally {
+        setIsLoading(false);
+      }
     }
   }
 
   return (
-    <button type="button" onClick={shareData} className="permalink font-bold">
-      🔗 {isLoading ? 'Saving link...' : 'Get permalink'}
+    <button
+      className="ml-2 permalink font-bold"
+      onClick={shareData}
+      type="button"
+    >
+      🔗 {isLoading ? "Saving link..." : "Get permalink"}
     </button>
-  )
+  );
 }

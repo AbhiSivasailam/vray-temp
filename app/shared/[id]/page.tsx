@@ -1,9 +1,13 @@
-import { Result } from "@/app/[data]/Result"
-import { SuccessData } from "@/app/types"
-import { kv } from "@vercel/kv"
+import { type FetchSuccess } from "@/app/types";
+import { Result } from "@/app/[data]/Result";
+import { kv } from "@vercel/kv";
 
-export default async function SharedPage({ params: { id } }: { params: { id: string } }) {
-  const data = await kv.get(id)
+interface Props {
+  params: { id: string };
+}
+
+export default async function SharedPage({ params: { id } }: Props) {
+  const data = await kv.get<FetchSuccess>(id);
 
   if (data === null) {
     return (
@@ -22,8 +26,8 @@ export default async function SharedPage({ params: { id } }: { params: { id: str
           : does not exist
         </p>
       </div>
-    )
+    );
   }
 
-  return <Result data={data as SuccessData} />
+  return <Result data={data} />;
 }
