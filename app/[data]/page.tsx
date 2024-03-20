@@ -42,7 +42,7 @@ export default function URLPage({ params, searchParams }: Props) {
         <ErrorBoundary
           fallback={<div>[Failed to visually render server-timing] {data}</div>}
         >
-          <ServerTimings data={params.data} />
+          <ServerTimings data={data} />
         </ErrorBoundary>
       ) : (
         <FetchURL url={data} cold={!!searchParams.cold} />
