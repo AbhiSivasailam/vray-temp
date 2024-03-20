@@ -79,7 +79,7 @@ function getDescription(label: string) {
     case "lambda-tunnel-connect":
       return "How long it took to connect to the N1 tunnel and do the handshake.";
     case "edgefnhttp":
-      return "How long it took the HTTP request to Cloudflare Workers for the Edge Function";
+      return "How long the HTTP request took to reach Cloudflare workers for the Edge function, including time spent in the proxy.";
     default:
       return "";
   }
