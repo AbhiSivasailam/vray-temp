@@ -78,6 +78,8 @@ function getDescription(label: string) {
       return "How long it took to send the request to the Node.js internal HTTP server and receive the full body.";
     case "lambda-tunnel-connect":
       return "How long it took to connect to the N1 tunnel and do the handshake.";
+    case "cfhttp":
+      return "How long the HTTP request took to reach Cloudflare workers invocation.";
     case "edgefnhttp":
       return "How long the HTTP request took to reach Cloudflare workers for the Edge function, including time spent in the proxy.";
     default:
