@@ -39,7 +39,9 @@ export async function fetchWithTimings(fetchUrl: string): Promise<FetchResult> {
     );
 
     const edgeTiming = serverTimingsObj["edgefnhttp"];
-    const lambdaTiming = serverTimingsObj["lambda-ttfb"];
+    const lambdaTiming =
+      serverTimingsObj["lambda-ttfb"] ||
+      serverTimingsObj["lambda-child-request-ttfb"];
     const headers: [string, string][] = [];
     response.headers.forEach((value, key) => {
       headers.push([key, value]);
