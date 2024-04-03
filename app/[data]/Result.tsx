@@ -2,6 +2,7 @@ import { type FetchSuccess } from "@/app/types";
 import { isColdStart } from "@/app/lib/is-cold-start";
 import { Fragment, type ReactNode } from "react";
 import { ServerTimings } from "./ServerTimings";
+import { isFunction } from "../lib/is-function";
 
 interface Props {
   data: FetchSuccess;
@@ -12,7 +13,7 @@ export function Result({ data, children }: Props) {
   return (
     <>
       <div className="text-sm font-mono pb-8 text-gray-600 dark:text-gray-400">
-        {isColdStart(data) ? "🥶" : "🌶️"}{" "}
+        {data.headers.find(([key]) => key === 'x-vercel-id') && isFunction(data) ? isColdStart(data) ? "🥶 " : "🌶️ " : ""}
         <span>
           {data.url} ({data.status} OK in {data.timings.total}ms) • headers:{" "}
           {data.timings.headers}ms (
