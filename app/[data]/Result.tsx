@@ -32,7 +32,7 @@ export function Result({ data, children }: Props) {
             </div>
             <div className="pr-3 break-words mb-3">
               {headerKey.toLowerCase() === "server-timing" ? (
-                <ServerTimings data={data.serverTimings} />
+                <ServerTimings data={headerValue} />
               ) : (
                 headerValue
               )}

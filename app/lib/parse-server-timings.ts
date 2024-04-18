@@ -7,12 +7,28 @@ import { type ServerTiming } from "@/app/types";
 export function parseServerTiming(timing: string) {
   return timing
     .split(",")
-    .map((timing: string): ServerTiming => {
+    .map((timing: string): ServerTiming[] => {
       const [label, ...parts] = timing.split(";");
       const [descText, withoutDesc] = findAndRemove(parts, "desc=");
       const [durText, rest] = findAndRemove(withoutDesc, "dur=");
       const offsets = descText.split("_").pop()?.split("+").map(Number) ?? [];
-      return {
+      const [, ...spans] = descText.replace(`${label}_`, '').split('_')
+
+      if (spans.length > 1) {
+        return spans.map(span => ({
+          label,
+          description: getDescription(label),
+          duration: parseFloat(span.split('+')[1]),
+          offset: parseFloat(span.split('+')[0]),
+          tags: rest.reduce((result: { [key: string]: string }, current) => {
+            const [key, value] = current.split("=");
+            result[key] = value;
+            return result;
+          }, {}),
+        }))
+      }
+
+      return [{
         label,
         description: getDescription(label),
         duration: parseFloat(durText.split("=")[1] ?? "0"),
@@ -22,8 +38,9 @@ export function parseServerTiming(timing: string) {
           result[key] = value;
           return result;
         }, {}),
-      };
+      }];
     })
+    .flat()
     .sort((a, b) => {
       return a.offset === b.offset
         ? b.duration - a.duration

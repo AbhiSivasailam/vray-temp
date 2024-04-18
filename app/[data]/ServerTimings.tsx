@@ -1,8 +1,7 @@
-import { type ServerTiming as ServerTimingData } from "@/app/types";
 import { parseServerTiming } from "@/app/lib/parse-server-timings";
 
 interface Props {
-  data: ServerTimingData[] | string;
+  data: string;
 }
 
 const COLORS = [
@@ -15,7 +14,7 @@ const COLORS = [
 ];
 
 export function ServerTimings({ data }: Props) {
-  const timings = typeof data === "string" ? parseServerTiming(data) : data;
+  const timings = parseServerTiming(data);
   const max = timings.reduce(
     (acc, cur) => Math.max(acc, cur.offset + cur.duration),
     0,
