@@ -11,7 +11,6 @@ export function isColdStart(data: FetchSuccess) {
 
   return (
     serverTimingsObj["lambda-tla"] ||
-    serverTimingsObj["lambda-child-init"] ||
-    serverTimingsObj["edgefnhttp"]?.tags["hot"] === "0"
+    serverTimingsObj["lambda-hotness-cold"]
   );
 }
