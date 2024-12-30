@@ -9,7 +9,7 @@ import { request } from "../lib/request";
 export const dynamic = "force-dynamic";
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     /**
      * Forces trying to get a cold boot.
      */
@@ -18,17 +18,19 @@ interface Props {
      * Enables Server-Timing rendering mode.
      */
     timing?: string;
-  };
-  params: {
+  }>;
+  params: Promise<{
     /**
      * Holds a string that can be a URL or a Server-Timing header. It will
      * be rendered as one or the other depending on the timing query.
      */
     data: string;
-  };
+  }>;
 }
 
-export default function URLPage({ params, searchParams }: Props) {
+export default async function URLPage(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const data = decodeURIComponent(params.data);
   return (
     <Suspense
