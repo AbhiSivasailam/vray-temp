@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Result } from "./Result";
-import { ShareButton } from "./ShareButton";
-import { ServerTimings } from "./ServerTimings";
-import { Spinner } from "./Spinner";
-import { request } from "../lib/request";
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Result } from './Result';
+import { ShareButton } from './ShareButton';
+import { ServerTimings } from './ServerTimings';
+import { Spinner } from './Spinner';
+import { request } from '../lib/request';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   searchParams: Promise<{
@@ -54,15 +54,27 @@ export default async function URLPage(props: Props) {
 }
 
 async function FetchURL({ url, cold }: { url: string; cold?: boolean }) {
-  const response = await request(url, { cold });
-  if ("error" in response) {
+  const [response, providerResponse] = await Promise.all([
+    request(url, { cold }),
+    fetch('https://get-providers.vercel.app/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url }),
+    })
+      .then((res) => res.json())
+      .catch(() => ({ providers: [] })),
+  ]);
+
+  if ('error' in response) {
     return (
       <div
         className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-100"
         role="alert"
       >
         <p>
-          <b>Error</b> fetching{" "}
+          <b>Error</b> fetching{' '}
           <code className="text-sm bg-red-200 dark:bg-red-600 dark:text-gray-200 px-1 py-0.5 rounded">
             {url}
           </code>
@@ -72,9 +84,24 @@ async function FetchURL({ url, cold }: { url: string; cold?: boolean }) {
     );
   }
 
+  const responseWithProviders = {
+    ...response,
+    headers: [
+      ...response.headers,
+      ['frameworks', providerResponse.frameworks?.join(', ') || 'Unknown'] as [
+        string,
+        string
+      ],
+      ['providers', providerResponse.providers?.join(', ') || 'Unknown'] as [
+        string,
+        string
+      ],
+    ],
+  };
+
   return (
-    <Result data={response}>
-      <ShareButton data={response} />
+    <Result data={responseWithProviders}>
+      <ShareButton data={responseWithProviders} />
     </Result>
   );
 }
