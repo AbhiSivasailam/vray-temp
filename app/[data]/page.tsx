@@ -88,11 +88,11 @@ async function FetchURL({ url, cold }: { url: string; cold?: boolean }) {
     ...response,
     headers: [
       ...response.headers,
-      ['frameworks', providerResponse.frameworks?.join(', ') || ''] as [
+      ['frameworks', providerResponse.frameworks?.join(', ') || 'Unknown'] as [
         string,
         string
       ],
-      ['providers', providerResponse.providers?.join(', ') || ''] as [
+      ['providers', providerResponse.providers?.join(', ') || 'Unknown'] as [
         string,
         string
       ],
