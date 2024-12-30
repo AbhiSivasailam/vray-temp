@@ -48,9 +48,9 @@ export function Result({ data, children }: Props) {
       <div className="text-sm font-mono pb-4 text-gray-600 dark:text-gray-400">
         {(frameworks || providers) && (
           <>
-            <span>frameworks:</span> {frameworks}
+            <span>Frameworks:</span> {frameworks}
             {' • '}
-            <span>providers:</span> {providers}
+            <span>Providers:</span> {providers}
             <div className="col-span-full border-b border-gray-200 dark:border-gray-700 mt-6" />
           </>
         )}
