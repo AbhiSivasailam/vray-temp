@@ -3,10 +3,16 @@ import { Result } from "@/app/[data]/Result";
 import { kv } from "@vercel/kv";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function SharedPage({ params: { id } }: Props) {
+export default async function SharedPage(props: Props) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const data = await kv.get<FetchSuccess>(id);
 
   if (data === null) {
