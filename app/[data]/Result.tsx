@@ -20,6 +20,7 @@ export function Result({ data, children }: Props) {
           : ''}
         <span>
           {data.url}
+          {' ('}
           <span
             className={
               data.status >= 200 && data.status < 300
