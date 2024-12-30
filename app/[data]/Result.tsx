@@ -11,11 +11,16 @@ interface Props {
 
 export function Result({ data, children }: Props) {
   const frameworks = data.headers.find(
-    ([key]) => key.toLowerCase() === 'frameworks',
+    ([key]) => key.toLowerCase() === 'frameworks'
   )?.[1];
   const providers = data.headers.find(
-    ([key]) => key.toLowerCase() === 'providers',
+    ([key]) => key.toLowerCase() === 'providers'
   )?.[1];
+
+  const headers = data.headers.filter(
+    ([key]) =>
+      key.toLowerCase() !== 'frameworks' && key.toLowerCase() !== 'providers'
+  );
 
   return (
     <>
@@ -30,7 +35,7 @@ export function Result({ data, children }: Props) {
           {' ('}
           <span
             className={
-              data.status >= 200 && data.status < 300
+              data.status >= 200 && data.status < 400
                 ? ''
                 : 'font-bold text-red-500'
             }
@@ -57,7 +62,7 @@ export function Result({ data, children }: Props) {
       </div>
 
       <div className="text-md md:text-base grid grid-cols-1 md:grid-cols-[auto,1fr] gap-x-6 max-w-full font-mono">
-        {data.headers.map(([headerKey, headerValue]) => (
+        {headers.map(([headerKey, headerValue]) => (
           <Fragment key={headerKey}>
             <div className="whitespace-nowrap font-semibold text-black dark:text-white">
               {headerKey}
