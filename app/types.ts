@@ -12,6 +12,7 @@ export interface FetchSuccess {
   headers: [string, string][];
   serverTimings: ServerTiming[];
   status: number;
+  statusText: string;
   timings: { headers: number; body: number; total: number };
   type?: "serverless" | "edge";
   url: string;

@@ -51,6 +51,7 @@ export async function fetchWithTimings(fetchUrl: string): Promise<FetchResult> {
       headers: headers,
       serverTimings: serverTimings,
       status: response.status,
+      statusText: response.statusText,
       timings: { headers: headerTime, body: bodyTime, total: totalTime },
       type: edgeTiming ? "edge" : !!lambdaTiming ? "serverless" : undefined,
       url: url,

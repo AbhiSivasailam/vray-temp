@@ -10,6 +10,19 @@ interface Props {
 }
 
 export function Result({ data, children }: Props) {
+function statusColor (status: number): string {
+  const firstChar = String(status).charAt(0)
+  switch (firstChar) {
+    case '2':
+      return 'text-green-500'
+    case '4':
+      return 'text-orange-500'
+    case '5':
+      return 'text-red-500'
+    default:
+      return 'text-gray-500'
+  }
+}
   const frameworks = data.headers.find(
     ([key]) => key.toLowerCase() === 'frameworks'
   )?.[1];
@@ -33,14 +46,8 @@ export function Result({ data, children }: Props) {
         <span>
           {data.url}
           {' ('}
-          <span
-            className={
-              data.status >= 200 && data.status < 400
-                ? ''
-                : 'font-bold text-red-500'
-            }
-          >
-            {data.status} OK
+          <span className={`font-bold ${statusColor(data.status)}`}>
+            {data.status} {data.statusText}
           </span>{' '}
           in {data.timings.total}ms) • headers: {data.timings.headers}ms (
           {toPercent(data.timings.headers, data.timings.total)}) • body:{' '}
