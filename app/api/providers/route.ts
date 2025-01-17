@@ -40,5 +40,16 @@ export async function POST(req: Request) {
     }
   }
 
-  return Response.json(await analyzeURL(normalizedURL.toString()));
+  return new Response(
+    JSON.stringify(await analyzeURL(normalizedURL.toString())),
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
+        'Content-Type': 'application/json',
+      },
+    },
+  );
 }
