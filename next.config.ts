@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   headers: async () => [
     {
-      source: '/api/providers',
+      source: '/:path*',
       headers: [
         {
           key: 'Access-Control-Allow-Origin',
