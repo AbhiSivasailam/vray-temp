@@ -8,7 +8,8 @@ An internal tool to inspect response headers, see framework and provider usage, 
 
 ```bash
 curl -X POST https://v-ray.app/api/providers \
-  -H "Content-Type: application/json" \
+  -H "content-type: application/json" \
+  -H "x-vercel-protection-bypass: 2DCXybRWG12n45XzJ02vpK9FxWPjFL0w" \
   -d '{
     "url": "https://vercel.com"
   }'
