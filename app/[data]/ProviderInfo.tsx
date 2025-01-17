@@ -1,21 +1,13 @@
+import { analyzeURL } from '@/lib/analyze-url';
+
 export async function ProviderInfo({ url }: { url: string }) {
-  const providerResponse = await fetch('https://get-providers.vercel.app/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ url }),
-  })
-    .then((res) => res.json())
-    .catch(() => ({ providers: [], frameworks: [] }));
+  const providers = await analyzeURL(url);
 
   return (
     <div className="pb-2">
-      <span>Frameworks:</span>{' '}
-      {providerResponse.frameworks?.join(', ') || 'Unknown'}
+      <span>Frameworks:</span> {providers?.frameworks?.join(', ') || 'Unknown'}
       {' • '}
-      <span>Providers:</span>{' '}
-      {providerResponse.providers?.join(', ') || 'Unknown'}
+      <span>Providers:</span> {providers?.providers?.join(', ') || 'Unknown'}
     </div>
   );
 }
