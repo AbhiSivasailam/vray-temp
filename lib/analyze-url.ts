@@ -352,25 +352,25 @@ export async function analyzeURL(url: string, retry = false, optional = false) {
     providers.add('Envoy');
   }
 
-  // when a website is cf-cache-status: DYNAMIC
-  // and the `/index` route is a 308 redirect,
-  // it's likely to be using Cloudflare Pages
   if (providers.size === 1 && providers.has('Cloudflare')) {
-    try {
-      const resIndex = await fetch(url + '/index', {
-        signal: AbortSignal.timeout(5000),
-        redirect: 'manual',
-      });
-      if (resIndex.status === 308) {
-        providers.add('Cloudflare Pages [maybe]');
+    if (body.includes('<!-- Cloudflare Pages Analytics -->')) {
+      providers.add('Cloudflare Pages');
+    } else {
+      // when a website is cf-cache-status: DYNAMIC
+      // and the `/index` route is a 308 redirect,
+      // it's likely to be using Cloudflare Pages
+      try {
+        const resIndex = await fetch(url + '/index', {
+          signal: AbortSignal.timeout(5000),
+          redirect: 'manual',
+        });
+        if (resIndex.status === 308) {
+          providers.add('Cloudflare Pages [maybe]');
+        }
+      } catch (err) {
+        console.error('error (/index cf check)', err);
       }
-    } catch (err) {
-      console.error('error (/index cf check)', err);
     }
-  }
-
-  if (body.includes('<!-- Cloudflare Pages Analytics -->')) {
-    providers.add('Cloudflare Pages');
   }
 
   return {
