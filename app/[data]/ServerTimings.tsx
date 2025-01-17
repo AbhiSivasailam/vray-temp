@@ -1,16 +1,16 @@
-import { parseServerTiming } from "@/app/lib/parse-server-timings";
+import { parseServerTiming } from '@/app/lib/parse-server-timings';
 
 interface Props {
   data: string;
 }
 
 const COLORS = [
-  "bg-green-200 dark:bg-green-500",
-  "bg-yellow-200 dark:bg-yellow-500",
-  "bg-red-200 dark:bg-red-500",
-  "bg-purple-200 dark:bg-purple-500",
-  "bg-blue-200 dark:bg-blue-500",
-  "bg-pink-200 dark:bg-pink-500",
+  'bg-green-200 dark:bg-green-500',
+  'bg-yellow-200 dark:bg-yellow-500',
+  'bg-red-200 dark:bg-red-500',
+  'bg-purple-200 dark:bg-purple-500',
+  'bg-blue-200 dark:bg-blue-500',
+  'bg-pink-200 dark:bg-pink-500',
 ];
 
 export function ServerTimings({ data }: Props) {
@@ -24,7 +24,7 @@ export function ServerTimings({ data }: Props) {
     <div className="flex flex-col text-md md:text-base font-mono">
       {timings.map(({ description, tags, label, offset, duration }) => (
         <div
-          key={label}
+          key={label + offset + duration + description}
           className="flex flex-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 rounded group"
         >
           <div className="has-tooltip cursor-help min-w-[250px] text-neutral-400 group-hover:text-inherit group-hover:dark:text-gray-100 py-1">
@@ -32,7 +32,7 @@ export function ServerTimings({ data }: Props) {
               <div className="tooltip p-2 bg-neutral-800 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-800">
                 {description && (
                   <div>
-                    <b>{label}</b>:{" "}
+                    <b>{label}</b>:{' '}
                     <span className="font-sans">{description}</span>
                   </div>
                 )}
@@ -43,7 +43,7 @@ export function ServerTimings({ data }: Props) {
                         className="bg-gray-50 text-gray-700 rounded-sm text-xs p-1 mr-2 dark:bg-gray-500 dark:text-gray-50"
                         key={key}
                       >
-                        <b>{key}</b>:{" "}
+                        <b>{key}</b>:{' '}
                         <span className="font-sans">{tags[key]}</span>
                       </span>
                     ))}
@@ -57,7 +57,7 @@ export function ServerTimings({ data }: Props) {
             {duration != null ? (
               <div
                 className={`${
-                  duration !== 0 ? "px-1" : ""
+                  duration !== 0 ? 'px-1' : ''
                 } whitespace-nowrap min-w-[1px] h-full inline-flex flex-col justify-center text-s
                   ${
                     // pick a random color

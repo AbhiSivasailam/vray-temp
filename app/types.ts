@@ -14,8 +14,9 @@ export interface FetchSuccess {
   status: number;
   statusText: string;
   timings: { headers: number; body: number; total: number };
-  type?: "serverless" | "edge";
+  type?: 'serverless' | 'edge';
   url: string;
+  ip: string | undefined;
 }
 
 export interface FetchError {

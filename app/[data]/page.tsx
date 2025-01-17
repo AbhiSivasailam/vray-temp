@@ -4,16 +4,12 @@ import { Result } from './Result';
 import { ShareButton } from './ShareButton';
 import { ServerTimings } from './ServerTimings';
 import { Spinner } from './Spinner';
-import { request } from '../lib/request';
+import { fetchWithTimings } from '../lib/fetch-with-timings';
 
 export const dynamic = 'force-dynamic';
 
 interface Props {
   searchParams: Promise<{
-    /**
-     * Forces trying to get a cold boot.
-     */
-    cold?: string;
     /**
      * Enables Server-Timing rendering mode.
      */
@@ -47,25 +43,14 @@ export default async function URLPage(props: Props) {
           <ServerTimings data={data} />
         </ErrorBoundary>
       ) : (
-        <FetchURL url={data} cold={!!searchParams.cold} />
+        <FetchURL url={data} />
       )}
     </Suspense>
   );
 }
 
-async function FetchURL({ url, cold }: { url: string; cold?: boolean }) {
-  const [response, providerResponse] = await Promise.all([
-    request(url, { cold }),
-    fetch('https://get-providers.vercel.app/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url }),
-    })
-      .then((res) => res.json())
-      .catch(() => ({ providers: [] })),
-  ]);
+async function FetchURL({ url }: { url: string }) {
+  const response = await fetchWithTimings(url);
 
   if ('error' in response) {
     return (
@@ -84,24 +69,9 @@ async function FetchURL({ url, cold }: { url: string; cold?: boolean }) {
     );
   }
 
-  const responseWithProviders = {
-    ...response,
-    headers: [
-      ...response.headers,
-      ['frameworks', providerResponse.frameworks?.join(', ') || 'Unknown'] as [
-        string,
-        string
-      ],
-      ['providers', providerResponse.providers?.join(', ') || 'Unknown'] as [
-        string,
-        string
-      ],
-    ],
-  };
-
   return (
-    <Result data={responseWithProviders}>
-      <ShareButton data={responseWithProviders} />
+    <Result data={response}>
+      <ShareButton data={response} />
     </Result>
   );
 }

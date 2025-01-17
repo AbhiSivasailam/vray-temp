@@ -1,22 +1,21 @@
-"use client";
+'use client';
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export function Nav({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isTimingOnly = !!searchParams.get("timing");
-  const isSharedLink = pathname.startsWith("/shared");
-  const isForceCold = !!searchParams.get("cold");
+  const isTimingOnly = !!searchParams.get('timing');
+  const isSharedLink = pathname.startsWith('/shared');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const input = inputRef.current;
     return () => {
-      if (input) input.value = "";
+      if (input) input.value = '';
     };
   }, [isTimingOnly]);
 
@@ -24,7 +23,7 @@ export function Nav({ children }: { children: React.ReactNode }) {
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="w-full items-center whitespace-nowrap text-md border-b border-gray-200 dark:border-neutral-700 flex flex-wrap md:flex-nowrap">
         <NavLink href="/" selected={!isTimingOnly && !isSharedLink}>
-          Get headers
+          v-ray
         </NavLink>
         <NavLink href="/?timing=true" selected={isTimingOnly && !isSharedLink}>
           Analyze Server Timing
@@ -39,13 +38,13 @@ export function Nav({ children }: { children: React.ReactNode }) {
             ref={inputRef}
             placeholder={
               isTimingOnly
-                ? "terminator_rt;dur=170,terminator_conn;dur=0,terminator_dial;dur=0,terminator_whdr;dur=0..."
-                : "rauchg.com"
+                ? 'terminator_rt;dur=170,terminator_conn;dur=0,terminator_dial;dur=0,terminator_whdr;dur=0...'
+                : 'rauchg.com'
             }
             defaultValue={decodeURIComponent(pathname.slice(1))}
             onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
               const data = event.target.value;
-              if (data.startsWith("shared/")) {
+              if (data.startsWith('shared/')) {
                 router.replace(`/${data}`);
               } else {
                 router.replace(
@@ -55,16 +54,6 @@ export function Nav({ children }: { children: React.ReactNode }) {
             }}
           />
         </form>
-        {!isTimingOnly && (
-          <NavLink
-            selected={isForceCold}
-            href={`${pathname}?${assignParams(searchParams, {
-              cold: isForceCold ? undefined : "true",
-            }).toString()}`}
-          >
-            Try forcing cold
-          </NavLink>
-        )}
       </div>
       <div className="flex grow flex-col h-full w-full">{children}</div>
     </main>
@@ -82,25 +71,10 @@ function NavLink({
 }) {
   return (
     <Link
-      className={`p-5 ${selected ? "dark:text-gray-100" : "text-neutral-400"}`}
+      className={`p-5 ${selected ? 'dark:text-gray-100' : 'text-neutral-400'}`}
       href={href}
     >
       {children}
     </Link>
   );
-}
-
-function assignParams(
-  params: URLSearchParams,
-  override: Record<string, string | undefined>,
-) {
-  const clone = new URLSearchParams(params.toString());
-  for (const [key, value] of Object.entries(override)) {
-    if (typeof value === "undefined") {
-      clone.delete(key);
-    } else {
-      clone.set(key, value);
-    }
-  }
-  return clone;
 }
