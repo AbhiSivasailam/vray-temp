@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   headers: async () => [
     {
-      source: '/:path*',
+      source: '/api/providers',
       headers: [
         {
           key: 'Access-Control-Allow-Origin',
@@ -15,7 +15,8 @@ const nextConfig: NextConfig = {
         },
         {
           key: 'Access-Control-Allow-Headers',
-          value: 'Content-Type',
+          value:
+            'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
         },
       ],
     },
