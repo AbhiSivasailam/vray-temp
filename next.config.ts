@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       headers: [
         {
           key: 'Access-Control-Allow-Origin',
-          value: '*',
+          value: 'chrome-extension://*',
         },
         {
           key: 'Access-Control-Allow-Methods',
@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
           key: 'Access-Control-Allow-Headers',
           value:
             'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
+        },
+        {
+          key: 'Access-Control-Allow-Credentials',
+          value: 'true',
         },
       ],
     },

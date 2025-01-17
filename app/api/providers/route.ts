@@ -7,17 +7,17 @@ export function GET() {
   });
 }
 
-export function OPTIONS() {
-  return new Response(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
-    },
-  });
-}
+// export function OPTIONS() {
+//   return new Response(null, {
+//     status: 200,
+//     headers: {
+//       'Access-Control-Allow-Origin': '*',
+//       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+//       'Access-Control-Allow-Headers':
+//         'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
+//     },
+//   });
+// }
 
 export async function POST(req: Request) {
   const { url } = await req.json();
@@ -43,13 +43,13 @@ export async function POST(req: Request) {
   return new Response(
     JSON.stringify(await analyzeURL(normalizedURL.toString())),
     {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers':
-          'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
-        'Content-Type': 'application/json',
-      },
+      // headers: {
+      //   'Access-Control-Allow-Origin': '*',
+      //   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      //   'Access-Control-Allow-Headers':
+      //     'Content-Type, x-vercel-protection-bypass, x-vercel-set-bypass-cookie',
+      //   'Content-Type': 'application/json',
+      // },
     },
   );
 }
