@@ -6,7 +6,7 @@ export async function analyzeURL(url: string, retry = false, optional = false) {
 
   let res;
   try {
-    res = await fetch(url);
+    res = await fetch(url, { redirect: 'manual' });
   } catch (err) {
     if (!retry) {
       return analyzeURL(url, true, optional);
@@ -14,7 +14,7 @@ export async function analyzeURL(url: string, retry = false, optional = false) {
 
     // retry
     try {
-      res = await fetch(url);
+      res = await fetch(url, { redirect: 'manual' });
     } catch (err) {
       if (!optional) {
         // @ts-ignore
