@@ -135,7 +135,7 @@ export async function analyzeURL(url: string, retry = false, optional = false) {
     frameworks.add('Svelte');
   }
 
-  if (res.headers.has('x-shopify-stage')) {
+  if (res.headers.has('x-shopify-stage') || res.headers.has('x-shopid')) {
     frameworks.add('Shopify');
     providers.add('Shopify');
   }
